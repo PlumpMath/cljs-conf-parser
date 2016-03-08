@@ -12,6 +12,7 @@
                  [reagent "0.6.0-alpha"]
                  [re-frame "0.7.0-alpha-2"]
                  [com.lucasbradstreet/instaparse-cljs "1.4.1.0"]
+                 [fipp "0.6.4"]
                  [org.clojure/core.async "0.2.374"
                   :exclusions [org.clojure/tools.reader]]]
   

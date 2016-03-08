@@ -31,3 +31,31 @@
               :author "Brocade Communications",
               :email "noreply@brocade.com"}}]
   )
+
+
+
+(def init-state
+  {:init "server real rs2 10.27.13.11\n port default disable\n port http disable\n port http keepalive\n port http url \"HEAD /\"\n port http server-id 1102\n port http group-id  1 1\n!\nserver real rs3 10.27.13.12\n port default disable\n disable\n port http disable\n port http keepalive\n port http url \"HEAD /\"\n port http server-id 1103\n port http group-id  1 1\n!\nserver virtual vi1 172.27.13.54\n port default disable\n port ssl\n port ssl tcp-only\n no port ssl sticky\n port ssl ssl-proxy sslp1-client sslp2-server\n port ssl cookie-name \"persist\"\n port ssl csw-policy \"csp1\"\n bind ssl rs1 ssl\n!"
+  :grammar "  config = (server port*  <term> <ws>)*
+  server = servers | status
+  <servers> = <'server'> <sp> (real | virtual) <sp> key <sp> value <ws>
+  real = <'real'>
+  virtual = <'virtual'>
+  port =  ports | bind |disable
+  (* need to fix this, disable only works in port config)
+  <ports> = ['no' <sp>] <'port'> <sp> key | (<sp> value)* <ws>
+  bind = 'bind ssl' (<sp> key <sp> value) <ws>
+  status = !ports disable | enable
+  disable  = <'disable'> <ws>
+  enable = <'enable'> <ws>
+  sp =  #'[ ]+'
+  key = string
+  value = string | ip-address | quoted_string | number
+  <quoted_string> = #'(\".*\")'
+  <string> =  #'[a-zA-Z1-9\\-\\_\\.\"\\/]+'
+  <number> = #'[0-9]+'
+  <ip-address> = #'\\d+\\.\\d+\\.\\d+\\.\\d+'
+  <ws> = #'\\s+'
+  indent = #'\\^[ ]'
+  term = '!'"}
+  )

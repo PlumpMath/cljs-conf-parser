@@ -1,0 +1,27 @@
+server real rs2 10.27.13.11
+ port default disable
+ port http disable
+ port http keepalive
+ port http url "HEAD /"
+ port http server-id 1102
+ port http group-id  1 1
+!
+server real rs3 10.27.13.12
+ port default disable
+ disable
+ port http disable
+ port http keepalive
+ port http url "HEAD /"
+ port http server-id 1103
+ port http group-id  1 1
+!
+server virtual vi1 172.27.13.54
+ port default disable
+ port ssl
+ port ssl tcp-only
+ no port ssl sticky
+ port ssl ssl-proxy sslp1-client sslp2-server
+ port ssl cookie-name "persist"
+ port ssl csw-policy "csp1"
+ bind ssl rs1 ssl
+!
