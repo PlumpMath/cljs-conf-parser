@@ -39,9 +39,6 @@
   )
 
 
-(declare handle-input-entered)
-(declare handle-grammar-entered)
-
 (defn get-input     
    [db _] 
    (reaction (:input @db))) 
@@ -72,56 +69,25 @@
   (fn
     [db _]
     (let [nh {:input (str (.-value (js/document.getElementById "input")))
-    	      :grammar (str (.-value (js/document.getElementById "grammar")))}]
+    	        :grammar (str (.-value (js/document.getElementById "grammar")))}]
     (merge db nh)
     )))
-
-(def conf "server real rs2 10.27.13.11\n port default disable\n port http disable\n port http keepalive\n port http url \"HEAD /\"\n port http server-id 1102\n port http group-id  1 1\n!\nserver real rs3 10.27.13.12\n port default disable\n disable\n port http disable\n port http keepalive\n port http url \"HEAD /\"\n port http server-id 1103\n port http group-id  1 1\n!\nserver virtual vi1 172.27.13.54\n port default disable\n port ssl\n port ssl tcp-only\n no port ssl sticky\n port ssl ssl-proxy sslp1-client sslp2-server\n port ssl cookie-name \"persist\"\n port ssl csw-policy \"csp1\"\n bind ssl rs1 ssl\n!\n")
-
-
-(def parser1
- (insta/parser
-  "config = (server port*  <term> <ws>)*
-  server = servers | status
-  <servers> = <'server'> <sp> (real | virtual) <sp> key <sp> value <ws>
-  real = <'real'>
-  virtual = <'virtual'>
-  port =  ports | bind |disable
-  <ports> = ['no' <sp>] <'port'> <sp> key | (<sp> value)* <ws>
-  bind = 'bind ssl' (<sp> key <sp> value) <ws>
-  status = !ports disable | enable
-  disable  = <'disable'> <ws>
-  enable = <'enable'> <ws>
-  sp =  #'[ ]+'
-  key = string
-  value = string | ip-address | number | quoted_string
-  <quoted_string> = #'(\".*\")'
-  <number> = #'[0-9]+'
-  <string> =  #'[a-zA-Z1-9\\-\\_\\.\"\\/]+'
-  <ip-address> = #'\\d+\\.\\d+\\.\\d+\\.\\d+'
-  <ws> = #'\\s+'
-  indent = #'^[ ]'
-  term = '!'
-  "))
-
 
 (defn parser
 	[grammar input]
 	(print "in parser")
-	(let [parser (insta/parser grammar)
-		  result (parser input)]
-		 (if (insta/failure? result)
-		 	(insta/get-failure result)
-		 	result))
-	)
+	(let [parser   (insta/parser grammar)
+		    result   (parser input)]
+		    (if (insta/failure? result)
+		 	      (insta/get-failure result)
+		 	      result)))
 
 (register-handler
 	:parser-generator
 	(fn
 	  [db _]
-	  ; #_(print (:grammar @db))
-	  (let [i (:input db)
-	  	    g (:grammar db)
+	  (let [i      (:input db)
+	  	    g      (:grammar db)
 	  	    result (parser g i)
 	  	   ]
 	  	   (assoc db :result result)
@@ -137,12 +103,14 @@
         [:nav.brocade-red {:role "navigation"}
                   [:div.nav-wrapper.container
                    [:a.brand-logo {:href "" :id "logo-container"} [:h1.brocade-logo] [:span.sub-title title]]
-                   [:ul.right.hide-on-med-and-down (map
-                     (fn [{:keys [title href]}]
+                   [:ul.right.hide-on-med-and-down 
+                    (map
+                      (fn [{:keys [title href]}]
                          ^{:key title} [:li [:a {:href href} title]])
                      items)]
-                   [:ul.side-nav {:id "nav-mobile"} (map
-                     (fn [{:keys [title href]}]
+                   [:ul.side-nav {:id "nav-mobile"} 
+                    (map
+                      (fn [{:keys [title href]}]
                          ^{:key title} [:li [:a {:href href} title]])
                      items)]
                    [:a.button-collapse {:data-activates "nav-mobile"} [:i.material-icons "menu"]]

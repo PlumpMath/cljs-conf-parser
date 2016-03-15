@@ -4,7 +4,7 @@
   real = <'real'>
   virtual = <'virtual'>
   port =  ports | bind |disable
-  <ports> = ['no' <sp>]  <'port'> (<sp> value | <sp> key <sp> value | <sp> key <sp> value <sp> value)* <ws>
+  <ports> = ['no' <sp>]  <'port'> (<sp> value | <sp> key <sp> value | <sp> key <sp> value <sp> value)* 
   bind = 'bind ssl' (<sp> key <sp> value) <ws>
   status = !ports disable | enable
   disable  = <'disable'> <ws>
